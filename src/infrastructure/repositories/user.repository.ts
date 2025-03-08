@@ -32,6 +32,13 @@ export class UserRepository {
   }
   
 
+  async findByEmail(email: string): Promise<PrismaUser | null> {
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { role: true }, 
+    });
+  }
+
   async deleteUser(id: number): Promise<void> {
     await this.prisma.user.delete({ where: { id } });
   }

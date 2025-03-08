@@ -1,5 +1,12 @@
-import { IsString, IsEmail, IsInt, IsBoolean, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsInt, IsBoolean, IsOptional, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+class RoleConnectDto {
+  @ApiProperty({ example: 1 })
+  @IsInt()
+  id: number;
+}
 
 export class CreateUserDto {
   @ApiProperty({ example: 'John Doe' }) 
@@ -14,14 +21,10 @@ export class CreateUserDto {
   @IsString()
   password: string;
   
-  @ApiProperty({ example: 'M001', required: false }) 
-  @IsOptional()
-  @IsString()
-  code?: string;
-
-  @ApiProperty({ example: 1 }) 
-  @IsInt()
-  roleId: number; 
+  @ApiProperty({ type: RoleConnectDto }) 
+  @ValidateNested()
+  @Type(() => RoleConnectDto)
+  role: RoleConnectDto; 
 
   @ApiProperty({ example: true, required: false })
   @IsOptional()
