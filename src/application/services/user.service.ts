@@ -18,7 +18,7 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto, currentUser?: UserWithRole): Promise<PrismaUser> {
-    if (currentUser && currentUser.role?.name !== 'admin') {
+    if (currentUser && currentUser.role?.name !== 'Admin') {
       throw new UnauthorizedException('Only admin can create users');
     }
 
@@ -41,7 +41,7 @@ export class UserService {
   
 
   async deleteUser(id: number, role: string) {
-    if (role !== 'admin') throw new UnauthorizedException('Only admin can delete users');
+    if (role !== 'Admin') throw new UnauthorizedException('Only admin can delete users');
     return this.userRepository.deleteUser(id);
   }
 

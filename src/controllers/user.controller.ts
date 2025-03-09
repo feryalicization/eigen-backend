@@ -15,8 +15,11 @@ import { CreateUserDto } from '../application/dto/create-user.dto';
 import { User as PrismaUser } from '@prisma/client';
 import { JwtAuthGuard } from '../infrastructure/auth/jwt-auth.guard'; 
 import { LoginUserDto } from '../application/dto/login-user.dto';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
+@ApiBearerAuth() 
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
