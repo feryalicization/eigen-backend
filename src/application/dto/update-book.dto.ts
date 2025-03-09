@@ -2,6 +2,12 @@ import { IsString, IsNotEmpty, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateBookDto {
+
+  @ApiProperty({ example: 'SHR-1' }) 
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+
   @ApiProperty({ example: 'Matematic Book' }) 
   @IsString()
   @IsNotEmpty()

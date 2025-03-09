@@ -67,29 +67,52 @@ export class BorrowService {
     return { message: 'Book returned successfully', penaltyUntil };
   }
 
-  async checkBooks() {
-    return this.prisma.book.findMany({
-      where: {
-        quantity: {
-          not: 0, 
-        },
-      },
+  async checkBooks() { 
+    const books = await this.prisma.book.findMany({
+      where: { quantity: { not: 0 } }, 
     });
+  
+    return books.map(book => ({
+      code: book.code,
+      title: book.title,
+      author: book.author,
+      stock: book.quantity, 
+    }));
   }
+  
   
 
   async checkMembers() {
-    return this.prisma.user.findMany({
+    const members = await this.prisma.user.findMany({
       where: {
         role: {
-          name: 'Member', 
+          is: { name: 'Member' }, 
         },
       },
       include: {
-        borrows: true,
+        borrows: {
+          include: {
+            book: true, 
+          },
+        },
       },
     });
+  
+    return members.map(member => ({
+      code: member.code,
+      name: member.name,
+      borrows: member.borrows.map(borrow => ({
+        bookId: borrow.bookId,
+        bookCode: borrow.book.code, 
+        bookTitle: borrow.book.title,
+        borrowedAt: borrow.borrowedAt,
+        returnedAt: borrow.returnedAt,
+        isLate: borrow.isLate,
+      })),
+    }));
   }
+  
+  
   
 }
 
