@@ -7,28 +7,49 @@ import { UpdateBookDto } from '../dto/update-book.dto';
 export class BookService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createBook(data: CreateBookDto) {
-    return this.prisma.book.create({ data });
+  async createBook(createBookDto: CreateBookDto, createdBy: number) {
+    return this.prisma.book.create({
+      data: {
+        ...createBookDto,
+        createdBy, 
+        createdAt: new Date(), 
+      },
+    });
   }
 
   async getAllBooks() {
-    return this.prisma.book.findMany();
+    return this.prisma.book.findMany({
+      where: { deletedAt: null }, 
+    });
   }
 
   async getBookById(id: number) {
     const book = await this.prisma.book.findUnique({ where: { id } });
-    if (!book) throw new NotFoundException('Book not found');
+    if (!book || book.deletedAt) throw new NotFoundException('Book not found');
     return book;
   }
 
-  async updateBook(id: number, data: UpdateBookDto) {
+  async updateBook(id: number, updateBookDto: UpdateBookDto, updatedBy: number) {
     return this.prisma.book.update({
       where: { id },
-      data,
+      data: {
+        ...updateBookDto,
+        updatedBy, // ✅ Save updatedBy
+        updatedAt: new Date(), // ✅ Auto-set updatedAt
+      },
     });
   }
 
-  async deleteBook(id: number) {
-    return this.prisma.book.delete({ where: { id } });
+  async softDeleteBook(id: number, deletedBy: number) {
+    const book = await this.prisma.book.findUnique({ where: { id } });
+    if (!book || book.deletedAt) throw new NotFoundException('Book not found');
+
+    return this.prisma.book.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(), 
+        deletedBy, 
+      },
+    });
   }
 }

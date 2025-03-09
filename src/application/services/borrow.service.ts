@@ -69,7 +69,9 @@ export class BorrowService {
 
   async checkBooks() { 
     const books = await this.prisma.book.findMany({
-      where: { quantity: { not: 0 } }, 
+      where: { 
+        quantity: { not: 0 },
+        deletedAt: null }, 
     });
   
     return books.map(book => ({
