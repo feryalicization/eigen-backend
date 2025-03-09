@@ -17,17 +17,17 @@ model Role {
   updatedAt DateTime  @updatedAt
   updatedBy Int?
 
-  users User[] 
+  users User[]
 }
 
 model User {
   id        Int       @id @default(autoincrement())
-  code      String?    @unique
+  code      String?   @unique
   name      String
   email     String    @unique
   password  String
   roleId    Int
-  role      Role      @relation(fields: [roleId], references: [id]) 
+  role      Role      @relation(fields: [roleId], references: [id])
   isActive  Boolean   @default(true)
   isPenalty Boolean   @default(false)
   deletedAt DateTime?
@@ -37,5 +37,36 @@ model User {
   updatedAt DateTime  @updatedAt
   updatedBy Int?
 
+  borrows Borrow[]
+
   @@unique([email, roleId])
+}
+
+model Book {
+  id        Int       @id @default(autoincrement())
+  title     String
+  author    String
+  quantity  Int       @default(1)
+  deletedAt DateTime?
+  deletedBy Int?
+  createdAt DateTime  @default(now())
+  createdBy Int?
+  updatedAt DateTime  @updatedAt
+  updatedBy Int?
+
+  borrows Borrow[]
+}
+
+model Borrow {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  borrowedAt DateTime  @default(now())
+  returnedAt DateTime?
+  isLate     Boolean   @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@unique([userId, bookId])
 }
