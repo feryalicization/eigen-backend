@@ -5,9 +5,12 @@ import { PrismaService } from 'src/prisma.service';
 export class RoleRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createRole(name: string) {
+  async createRole(name: string, createdBy: number) {
     return this.prisma.role.create({
-      data: { name },
+      data: {
+        name,
+        createdBy, 
+      },
     });
   }
 
@@ -26,10 +29,13 @@ export class RoleRepository {
     });
   }
 
-  async updateRole(id: number, name: string) {
+  async updateRole(id: number, name: string, updatedBy: number) {
     return this.prisma.role.update({
       where: { id },
-      data: { name },
+      data: {
+        name,
+        updatedBy, 
+      },
     });
   }
 }

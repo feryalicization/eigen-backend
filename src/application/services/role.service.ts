@@ -8,8 +8,8 @@ import { PrismaService } from 'src/prisma.service';
 export class RoleService {
   constructor(private readonly roleRepository: RoleRepository, private readonly prisma: PrismaService) {}
 
-  async createRole(createRoleDto: CreateRoleDto) {
-    return this.roleRepository.createRole(createRoleDto.name);
+  async createRole(createRoleDto: CreateRoleDto, userId: number) {
+    return this.roleRepository.createRole(createRoleDto.name, userId);
   }
 
   async findAllRoles() {
@@ -26,12 +26,12 @@ export class RoleService {
     return role;
   }
 
-  async updateRole(id: number, updateRoleDto: UpdateRoleDto) {
+  async updateRole(id: number, updateRoleDto: UpdateRoleDto, userId: number) {
     if (!updateRoleDto.name) {
       throw new Error('Role name is required'); 
     }
     
-    return this.roleRepository.updateRole(id, updateRoleDto.name);
+    return this.roleRepository.updateRole(id, updateRoleDto.name, userId);
   }
   
 

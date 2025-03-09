@@ -28,8 +28,9 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  async create(@Body() createRoleDto: CreateRoleDto) {
-    return this.roleService.createRole(createRoleDto);
+  async create(@Body() createRoleDto: CreateRoleDto, @Req() req: AuthenticatedRequest) {
+    const userId = req.user.id; 
+    return this.roleService.createRole(createRoleDto, userId);
   }
 
   @Get()
@@ -43,8 +44,9 @@ export class RoleController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.roleService.updateRole(id, updateRoleDto);
+  async update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto, @Req() req: AuthenticatedRequest) {
+    const userId = req.user.id;
+    return this.roleService.updateRole(id, updateRoleDto, userId);
   }
 
   @Delete(':id')
