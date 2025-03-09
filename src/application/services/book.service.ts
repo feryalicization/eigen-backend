@@ -34,8 +34,8 @@ export class BookService {
       where: { id },
       data: {
         ...updateBookDto,
-        updatedBy, // ✅ Save updatedBy
-        updatedAt: new Date(), // ✅ Auto-set updatedAt
+        updatedBy, 
+        updatedAt: new Date(), 
       },
     });
   }
